@@ -4,14 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@android:color/white"> <EditText
-    android:id="@+id/etNombreMascota"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Nombre de la mascota"
-    android:textColorHint="@android:color/darker_gray"
-    android:textColor="@android:color/black"
-    android:minHeight="48dp" />
+    android:background="@android:color/white">
+
+    <EditText
+        android:id="@+id/etNombreMascota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre de la mascota"
+        android:textColorHint="@android:color/darker_gray"
+        android:textColor="@android:color/black"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/etEdadMascota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Edad de la mascota (años)"
+        android:inputType="number"
+        android:textColorHint="@android:color/darker_gray"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         listaMascotas = findViewById(R.id.lista_mascotas);
         fabAdd = findViewById(R.id.fab_add);
 
-        // 1. Configuración de la navegación (Crear)
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 2. Configuración del menú de opciones (Clic largo para Editar/Eliminar)
         listaMascotas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -51,29 +49,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recarga la lista cada vez que la actividad vuelve a estar en primer plano
         cargarDatos();
     }
 
     private void cargarDatos() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // 3. Consulta SQL con LEFT JOIN para obtener el nombre de la mascota, dueño y raza
+        // Consulta SQL con LEFT JOIN actualizada
         String selectQuery = "SELECT " +
+                // Alias "_id" es obligatorio para SimpleCursorAdapter
                 "T1." + PetContract.MascotasEntry.COLUMN_ID + " AS " + PetContract.MascotasEntry.COLUMN_ID + ", " +
+                "T1." + PetContract.MascotasEntry.COLUMN_ID + " AS " + "_id" + ", " +
                 "T1." + PetContract.MascotasEntry.COLUMN_NOMBRE + ", " +
                 "T2." + PetContract.DuenosEntry.COLUMN_NOMBRE + " AS nombre_dueno, " +
-                "T3." + PetContract.RazasEntry.COLUMN_NOMBRE + " AS nombre_raza " +
+                "T3." + PetContract.RazasEntry.COLUMN_NOMBRE_RAZA + " AS nombre_raza " + // Columna actualizada
                 "FROM " + PetContract.MascotasEntry.TABLE_NAME + " T1 " +
                 "LEFT JOIN " + PetContract.DuenosEntry.TABLE_NAME + " T2 " +
-                "ON T1." + PetContract.MascotasEntry.COLUMN_ID_DUENO + " = T2." + PetContract.DuenosEntry.COLUMN_ID +
+                "ON T1." + PetContract.MascotasEntry.COLUMN_FK_ID_DUENO + " = T2." + PetContract.DuenosEntry.COLUMN_ID + // FK actualizada
                 " LEFT JOIN " + PetContract.RazasEntry.TABLE_NAME + " T3 " +
-                "ON T1." + PetContract.MascotasEntry.COLUMN_ID_RAZA + " = T3." + PetContract.RazasEntry.COLUMN_ID;
+                "ON T1." + PetContract.MascotasEntry.COLUMN_FK_ID_RAZA + " = T3." + PetContract.RazasEntry.COLUMN_ID; // FK actualizada
 
-        // Ejecutar la consulta
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // 4. Configuración del SimpleCursorAdapter con los alias de las columnas
         String[] fromColumns = {
                 PetContract.MascotasEntry.COLUMN_NOMBRE,
                 "nombre_dueno",
@@ -102,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Opciones");
         builder.setMessage("¿Qué deseas hacer con esta mascota?");
 
-        // Opción: Eliminar
         builder.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -110,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Opción: Editar
         builder.setNegativeButton("Editar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -127,14 +122,11 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = PetContract.MascotasEntry.COLUMN_ID + " = ?";
         String[] selectionArgs = { String.valueOf(idMascota) };
-
-        // Ejecutar el comando de borrado (Delete)
         db.delete(
                 PetContract.MascotasEntry.TABLE_NAME,
                 selection,
                 selectionArgs);
-
         db.close();
-        cargarDatos(); // Recarga la lista para mostrar el cambio
+        cargarDatos();
     }
 }

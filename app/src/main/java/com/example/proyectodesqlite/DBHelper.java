@@ -11,30 +11,35 @@ import com.example.proyectodesqlite.PetContract.RazasEntry;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "mascotas.db";
-    private static final int DATABASE_VERSION = 2; // Incrementar la versión para forzar onCreate()
+    private static final int DATABASE_VERSION = 3; // Version incrementada por cambios de esquema
 
-    // Sentencia SQL para crear la tabla de dueños
+    // Sentencia SQL para crear la tabla de dueños (Nuevos campos)
     private static final String SQL_CREATE_DUENOS =
             "CREATE TABLE " + DuenosEntry.TABLE_NAME + " (" +
                     DuenosEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    DuenosEntry.COLUMN_NOMBRE + " TEXT)";
+                    DuenosEntry.COLUMN_NOMBRE + " TEXT," +
+                    DuenosEntry.COLUMN_TELEFONO + " TEXT," +
+                    DuenosEntry.COLUMN_EDAD_DUENO + " INTEGER," +
+                    DuenosEntry.COLUMN_CANT_MASCOTAS + " INTEGER DEFAULT 0)";
 
-    // Sentencia SQL para crear la tabla de razas
+    // Sentencia SQL para crear la tabla de razas (Nuevos campos)
     private static final String SQL_CREATE_RAZAS =
             "CREATE TABLE " + RazasEntry.TABLE_NAME + " (" +
                     RazasEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    RazasEntry.COLUMN_NOMBRE + " TEXT)";
+                    RazasEntry.COLUMN_TIPO_MASCOTA + " TEXT," +
+                    RazasEntry.COLUMN_NOMBRE_RAZA + " TEXT)";
 
-    // Sentencia SQL para crear la tabla de mascotas (incluyendo FOREIGN KEYS)
+    // Sentencia SQL para crear la tabla de mascotas (Nuevos/Actualizados PKs/FKs)
     private static final String SQL_CREATE_MASCOTAS =
             "CREATE TABLE " + MascotasEntry.TABLE_NAME + " (" +
                     MascotasEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     MascotasEntry.COLUMN_NOMBRE + " TEXT," +
-                    MascotasEntry.COLUMN_ID_DUENO + " INTEGER," +
-                    MascotasEntry.COLUMN_ID_RAZA + " INTEGER," +
-                    "FOREIGN KEY(" + MascotasEntry.COLUMN_ID_DUENO + ") REFERENCES " +
+                    MascotasEntry.COLUMN_EDAD_MASCOTA + " INTEGER," +
+                    MascotasEntry.COLUMN_FK_ID_DUENO + " INTEGER," +
+                    MascotasEntry.COLUMN_FK_ID_RAZA + " INTEGER," +
+                    "FOREIGN KEY(" + MascotasEntry.COLUMN_FK_ID_DUENO + ") REFERENCES " +
                     DuenosEntry.TABLE_NAME + "(" + DuenosEntry.COLUMN_ID + ")," +
-                    "FOREIGN KEY(" + MascotasEntry.COLUMN_ID_RAZA + ") REFERENCES " +
+                    "FOREIGN KEY(" + MascotasEntry.COLUMN_FK_ID_RAZA + ") REFERENCES " +
                     RazasEntry.TABLE_NAME + "(" + RazasEntry.COLUMN_ID + "))";
 
     public DBHelper(Context context) {
@@ -46,8 +51,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_DUENOS);
         db.execSQL(SQL_CREATE_RAZAS);
         db.execSQL(SQL_CREATE_MASCOTAS);
-
-        // Agregamos datos iniciales (Seed data)
         insertInitialData(db);
     }
 
@@ -59,22 +62,35 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Método para insertar datos de prueba
+    // Método para insertar datos de prueba actualizados
     private void insertInitialData(SQLiteDatabase db) {
-        // Insertar Dueños
+        // Insertar Dueños (con nuevos campos)
         ContentValues duenoValues = new ContentValues();
-        duenoValues.put(PetContract.DuenosEntry.COLUMN_NOMBRE, "Alice Johnson");
-        db.insert(PetContract.DuenosEntry.TABLE_NAME, null, duenoValues);
-        duenoValues.put(PetContract.DuenosEntry.COLUMN_NOMBRE, "Bob Smith");
-        db.insert(PetContract.DuenosEntry.TABLE_NAME, null, duenoValues);
+        duenoValues.put(DuenosEntry.COLUMN_NOMBRE, "Alice Johnson");
+        duenoValues.put(DuenosEntry.COLUMN_TELEFONO, "555-1234");
+        duenoValues.put(DuenosEntry.COLUMN_EDAD_DUENO, 35);
+        db.insert(DuenosEntry.TABLE_NAME, null, duenoValues);
 
-        // Insertar Razas
+        duenoValues.clear();
+        duenoValues.put(DuenosEntry.COLUMN_NOMBRE, "Bob Smith");
+        duenoValues.put(DuenosEntry.COLUMN_TELEFONO, "555-5678");
+        duenoValues.put(DuenosEntry.COLUMN_EDAD_DUENO, 42);
+        db.insert(DuenosEntry.TABLE_NAME, null, duenoValues);
+
+        // Insertar Razas (con nuevos campos)
         ContentValues razaValues = new ContentValues();
-        razaValues.put(PetContract.RazasEntry.COLUMN_NOMBRE, "Labrador");
-        db.insert(PetContract.RazasEntry.TABLE_NAME, null, razaValues);
-        razaValues.put(PetContract.RazasEntry.COLUMN_NOMBRE, "Golden Retriever");
-        db.insert(PetContract.RazasEntry.TABLE_NAME, null, razaValues);
-        razaValues.put(PetContract.RazasEntry.COLUMN_NOMBRE, "Siames");
-        db.insert(PetContract.RazasEntry.TABLE_NAME, null, razaValues);
+        razaValues.put(RazasEntry.COLUMN_TIPO_MASCOTA, "Perro");
+        razaValues.put(RazasEntry.COLUMN_NOMBRE_RAZA, "Labrador");
+        db.insert(RazasEntry.TABLE_NAME, null, razaValues);
+
+        razaValues.clear();
+        razaValues.put(RazasEntry.COLUMN_TIPO_MASCOTA, "Perro");
+        razaValues.put(RazasEntry.COLUMN_NOMBRE_RAZA, "Golden Retriever");
+        db.insert(RazasEntry.TABLE_NAME, null, razaValues);
+
+        razaValues.clear();
+        razaValues.put(RazasEntry.COLUMN_TIPO_MASCOTA, "Gato");
+        razaValues.put(RazasEntry.COLUMN_NOMBRE_RAZA, "Siames");
+        db.insert(RazasEntry.TABLE_NAME, null, razaValues);
     }
 }
