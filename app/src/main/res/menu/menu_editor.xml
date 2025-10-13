@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--
+    El ID action_save es el que se verifica en el método
+    onOptionsItemSelected de AddPetActivity.java para guardar los datos.
+    -->
+    <item
+        android:id="@+id/action_save"
+        android:title="Guardar"
+        android:icon="@android:drawable/ic_menu_save"
+        app:showAsAction="always" />
+</menu>

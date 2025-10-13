@@ -1,66 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@android:color/white">
+    android:fillViewport="true"
+    tools:context=".AddPetActivity">
 
-    <EditText
-        android:id="@+id/etNombreMascota"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:hint="Nombre de la mascota"
-        android:textColorHint="@android:color/darker_gray"
-        android:textColor="@android:color/black"
-        android:minHeight="48dp" />
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal">
 
-    <EditText
-        android:id="@+id/etEdadMascota"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Edad de la mascota (años)"
-        android:inputType="number"
-        android:textColorHint="@android:color/darker_gray"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="16dp"
-        android:minHeight="48dp" />
+        <!-- TÍTULO: REGISTRAR NUEVA MASCOTA -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_add_pet"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginBottom="24dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dueño:"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="24dp" />
-    <Spinner
-        android:id="@+id/spinnerDueno"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/darker_gray"
-        android:minHeight="48dp" />
+        <!-- SECCIÓN: DATOS DE LA MASCOTA -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/section_pet_data"
+            android:textStyle="italic"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Raza:"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="24dp" />
-    <Spinner
-        android:id="@+id/spinnerRaza"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/darker_gray"
-        android:minHeight="48dp" />
+        <!-- Campo Nombre de la Mascota -->
+        <EditText
+            android:id="@+id/edit_pet_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_name"
+            android:inputType="textCapWords"
+            android:layout_marginBottom="12dp" />
 
-    <Button
-        android:id="@+id/btnGuardarMascota"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="GUARDAR"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@android:color/black"
-        android:layout_marginTop="48dp" />
+        <!-- Campo Edad de la Mascota -->
+        <EditText
+            android:id="@+id/edit_pet_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_age"
+            android:inputType="number"
+            android:maxLength="2"
+            android:layout_marginBottom="12dp" />
 
-</LinearLayout>
+        <!-- Spinner de Razas -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_breed"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
+
+        <Spinner
+            android:id="@+id/spinner_breed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_marginBottom="24dp" />
+
+        <!-- SECCIÓN: DATOS DEL DUEÑO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/section_owner_data"
+            android:textStyle="italic"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Campo Nombre del Dueño -->
+        <EditText
+            android:id="@+id/edit_owner_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_owner_name"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Campo Teléfono del Dueño -->
+        <EditText
+            android:id="@+id/edit_owner_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_phone"
+            android:inputType="phone"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Botón de Guardar -->
+        <Button
+            android:id="@+id/BtnSavePet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save_pet" />
+
+    </LinearLayout>
+</ScrollView>

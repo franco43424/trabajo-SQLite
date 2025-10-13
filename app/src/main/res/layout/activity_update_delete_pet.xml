@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".UpdateDeletePetActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="--- DATOS DE LA MASCOTA ---"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Campo Nombre de la Mascota -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre de la Mascota"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_pet_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ej. Pipo"
+            android:inputType="textCapWords"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Campo Edad de la Mascota -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edad (Años)"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_pet_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ej. 3"
+            android:inputType="number"
+            android:maxLength="2"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Spinner de Razas -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Raza"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinner_breed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="--- DATOS DEL DUEÑO ---"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Campo Nombre del Dueño -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre del Dueño"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_owner_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ej. Juan Pérez"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Campo Teléfono del Dueño -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Teléfono del Dueño"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_owner_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ej. 555-12345"
+            android:inputType="phone"
+            android:layout_marginBottom="32dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- Botón de Actualizar/Guardar -->
+            <Button
+                android:id="@+id/BtnUpdatePet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Actualizar"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- Botón de Eliminar -->
+            <Button
+                android:id="@+id/BtnDeletePet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Eliminar"
+                android:backgroundTint="#FF5722"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

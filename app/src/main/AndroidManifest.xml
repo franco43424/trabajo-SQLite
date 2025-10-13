@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.example.proyectodesqlite">
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ProyectoDeSQLite">
+        android:theme="@style/Theme.Proyectodesqlite">
+
+        <!-- 1. MainActivity -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 2. AddPetActivity -->
+        <activity
+            android:name=".AddPetActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- 3. UpdateDeletePetActivity (¡FALTABA ESTO!) -->
+        <activity
+            android:name=".UpdateDeletePetActivity"
+            android:parentActivityName=".MainActivity" />
+
     </application>
 
 </manifest>
+
