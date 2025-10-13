@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">proyecto de SQLite</string>
+
+    <string name="title_add_pet">REGISTRAR NUEVA MASCOTA</string>
+    <string name="section_pet_data">Datos de la Mascota</string>
+    <string name="hint_name">Nombre</string>
+    <string name="hint_age">Edad (Años)</string>
+    <string name="label_breed">Raza</string>
+    <string name="section_owner_data">Datos del Dueño</string>
+    <string name="hint_owner_name">Nombre Completo</string>
+    <string name="hint_phone">Teléfono</string>
+    <string name="btn_save_pet">Guardar Mascota</string>
+
 </resources>
+

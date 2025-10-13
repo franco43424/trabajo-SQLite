@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Fondo blanco para que destaque dentro del CardView -->
+    <solid android:color="#FFFFFF"/>
+
+    <!-- Esquinas redondeadas suaves -->
+    <corners android:radius="8dp"/>
+
+    <!-- Borde gris para dar la sensación de campo de entrada -->
+    <stroke
+        android:width="2dp"
+        android:color="#DDDDDD"/>
+</shape>
