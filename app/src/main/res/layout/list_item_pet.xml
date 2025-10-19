@@ -1,32 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingVertical="12dp"
-    android:paddingHorizontal="16dp"
-    android:background="@android:color/white">
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="#1F1F1F">
 
-    <TextView
-        android:id="@+id/tvNombreMascota"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black" />
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tvNombreDueno"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray" />
+        <!-- Icono/Inicial de Mascota -->
+        <TextView
+            android:id="@+id/pet_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="P"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#121212"
+            android:background="@drawable/circle_background_purple"
+            android:layout_marginEnd="16dp"/>
 
-    <TextView
-        android:id="@+id/tvNombreRaza"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#AAAAAA" />
+        <!-- Información de la Mascota -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <!-- Nombre -->
+            <TextView
+                android:id="@+id/pet_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre de Mascota"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"/>
+
+            <!-- Raza y Edad -->
+            <TextView
+                android:id="@+id/pet_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Raza - X años"
+                android:textSize="14sp"
+                android:textColor="#AAAAAA"/>
+
+        </LinearLayout>
+
+        <!-- Flecha o Indicador de Edición -->
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_edit"
+            app:tint="#03DAC6"
+            android:contentDescription="Editar"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

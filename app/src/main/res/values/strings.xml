@@ -1,6 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">proyecto de SQLite</string>
+    <!-- Strings Genéricas y de Menú -->
+    <string name="app_name">Proyecto de SQLite</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_delete_all_entries">Eliminar Todo</string>
 
+    <!-- String para el Floating Action Button (FAB) -->
+    <string name="add_new_pet">Añadir nueva mascota</string>
+
+    <!-- Strings para la Actividad de Añadir/Editar Mascota -->
     <string name="title_add_pet">REGISTRAR NUEVA MASCOTA</string>
     <string name="section_pet_data">Datos de la Mascota</string>
     <string name="hint_name">Nombre</string>
@@ -11,5 +19,26 @@
     <string name="hint_phone">Teléfono</string>
     <string name="btn_save_pet">Guardar Mascota</string>
 
+    <!-- Strings para el empty view de MainActivity (ListView vacía) -->
+    <string name="empty_view_title_text">Aún no hay mascotas en el refugio</string>
+    <string name="empty_view_subtitle_text">¡Agrega una mascota haciendo clic en el botón Más (+)!</string>
+
+    <!-- Recursos de Citas -->
+    <string name="select_reason">Seleccionar Motivo</string>
+    <string-array name="appointment_reasons">
+        <item>Seleccionar Motivo</item>
+        <item>Chequeo General</item>
+        <item>Vacunación</item>
+        <item>Control Post-Operatorio</item>
+        <item>Urgencia/Emergencia</item>
+        <item>Otros</item>
+    </string-array>
+    <string name="owner_name_hint">Nombre del Dueño (Obligatorio)</string>
+    <string name="owner_phone_hint">Teléfono (Obligatorio)</string>
+    <string name="owner_photo_uri_hint">URL o URI de la foto del Dueño (Opcional)</string>
+    <string name="save_owner_and_pet">Guardar Dueño y Mascota</string>
+
+
 </resources>
+
 

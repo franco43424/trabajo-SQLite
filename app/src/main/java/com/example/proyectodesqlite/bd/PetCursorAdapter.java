@@ -7,64 +7,66 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
-
-import com.example.proyectodesqlite.bd.PetContract.MascotasEntry;
+import com.example.proyectodesqlite.R;
+import com.example.proyectodesqlite.bd.PetContract.MascotasEntry; // Importamos la clase de entrada de Mascotas
 
 /**
- * CursorAdapter personalizado para mostrar los detalles de la mascota en la ListView.
- * Muestra: Nombre de la mascota y, en la segunda línea, la edad, la raza y el nombre del dueño.
- * * NOTA: Este adaptador asume que el Cursor devuelto por petDatabase.getAllPetsCursor()
- * contiene columnas aliased como "raza_nombre" y "dueno_nombre".
- * Asume que el layout de cada elemento de lista es simple, con text1 y text2.
+ * Un CursorAdapter que toma un Cursor de mascotas (que incluye dueños y razas)
+ * y crea/actualiza los elementos de la ListView en MainActivity.
+ * Utiliza los IDs del layout list_item_pet.xml.
+ * * NOTA: Asume que el Cursor incluye los ALIAS 'owner_name_alias' y 'breed_name_alias'
+ * generados por PetDatabase.getAllPetsCursor().
  */
 public class PetCursorAdapter extends CursorAdapter {
 
-    /**
-     * Constructor.
-     * @param context El contexto de la aplicación.
-     * @param c El cursor de la base de datos desde el que obtener los datos.
-     */
     public PetCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* flags */);
     }
 
     /**
-     * Infla una nueva vista de elemento de lista.
-     * Usamos android.R.layout.simple_list_item_2 porque tiene text1 y text2.
+     * Hace una nueva vista de elemento de lista.
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_2, parent, false);
+        // Inflate the list_item_pet.xml layout
+        return LayoutInflater.from(context).inflate(R.layout.list_item_pet, parent, false);
     }
 
     /**
-     * Une los datos del cursor a una vista de elemento de lista existente.
+     * Vincula los datos del Cursor a las dos vistas principales en el layout:
+     * 1. pet_name (Nombre de la Mascota)
+     * 2. pet_details (Raza, Edad, Dueño)
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        // Encontrar los TextViews en el layout simple_list_item_2
-        TextView nameTextView = view.findViewById(android.R.id.text1);
-        TextView summaryTextView = view.findViewById(android.R.id.text2);
+        // Encontrar las vistas usando los IDs corregidos de list_item_pet.xml:
+        TextView petNameTextView = view.findViewById(R.id.pet_name);
+        TextView petDetailsTextView = view.findViewById(R.id.pet_details);
 
-        // Encontrar los índices de las columnas
-        int nameColumnIndex = cursor.getColumnIndexOrThrow(MascotasEntry.COLUMN_NOMBRE);
-        int edadColumnIndex = cursor.getColumnIndexOrThrow(MascotasEntry.COLUMN_EDAD);
+        // 1. Obtener índices de columna (Usando constantes del contrato para evitar errores de tipo "column does not exist")
 
-        // Asumimos que PetDatabase ha unido las tablas y ha usado estos aliases
-        int razaNameColumnIndex = cursor.getColumnIndexOrThrow("raza_nombre");
-        int duenoNameColumnIndex = cursor.getColumnIndexOrThrow("dueno_nombre");
+        // Nombre de la Mascota
+        int petNameColumnIndex = cursor.getColumnIndexOrThrow(MascotasEntry.COLUMN_NAME_NOMBRE);
 
-        // Leer los atributos de la mascota
-        String petName = cursor.getString(nameColumnIndex);
-        int petEdad = cursor.getInt(edadColumnIndex);
-        String razaName = cursor.getString(razaNameColumnIndex);
-        String duenoName = cursor.getString(duenoNameColumnIndex);
+        // Edad
+        int petAgeColumnIndex = cursor.getColumnIndexOrThrow(MascotasEntry.COLUMN_NAME_EDAD);
 
-        // Rellenar el TextView principal (text1)
-        nameTextView.setText(petName);
+        // Aliases para Dueño y Raza (DEBEN coincidir con PetDatabase.getAllPetsCursor() si usa JOIN)
+        int ownerNameColumnIndex = cursor.getColumnIndexOrThrow("owner_name_alias");
+        int breedNameColumnIndex = cursor.getColumnIndexOrThrow("breed_name_alias");
 
-        // Rellenar el TextView secundario (text2) con un resumen
-        String petSummary = "Edad: " + petEdad + " años | Raza: " + razaName + " | Dueño: " + duenoName;
-        summaryTextView.setText(petSummary);
+        // 2. Extraer valores del Cursor
+        String petName = cursor.getString(petNameColumnIndex);
+        int petAge = cursor.getInt(petAgeColumnIndex);
+        String ownerName = cursor.getString(ownerNameColumnIndex);
+        String breedName = cursor.getString(breedNameColumnIndex);
+
+        // 3. Crear el texto de detalles combinado
+        String details = String.format("Raza: %s | Edad: %d años | Dueño: %s",
+                breedName, petAge, ownerName);
+
+        // 4. Actualizar TextViews
+        petNameTextView.setText(petName);
+        petDetailsTextView.setText(details);
     }
 }

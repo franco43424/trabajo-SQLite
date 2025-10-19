@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Opción de Agendar Hora -->
+    <item
+        android:id="@+id/action_schedule"
+        android:title="Agendar Hora"
+        android:icon="@drawable/ic_menu_today"
+        app:showAsAction="never" />
+
+    <!-- La opción de agregar mascota (si la tienes en el menú) -->
+    <item
+        android:id="@+id/action_insert_dummy_data"
+        android:title="Agregar Mascota"
+        app:showAsAction="never"
+        android:visible="false" />
+
+</menu>

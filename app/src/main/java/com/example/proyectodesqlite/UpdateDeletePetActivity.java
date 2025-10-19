@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,8 +14,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.proyectodesqlite.bd.PetContract.MascotasEntry;
-import com.example.proyectodesqlite.bd.PetContract.RazasEntry;
 import com.example.proyectodesqlite.bd.PetDatabase;
 
 import java.util.ArrayList;
@@ -24,6 +24,11 @@ import java.util.List;
  */
 public class UpdateDeletePetActivity extends AppCompatActivity {
 
+    private static final String TAG = "UpdateDeleteActivity";
+
+    // 🚨 CORRECCIÓN CRÍTICA: Usamos la clave "pet_id" que ahora se envía desde MainActivity.
+    private static final String EXTRA_MASCOTA_ID_KEY = "pet_id";
+
     private EditText mNombreEditText;
     private EditText mEdadEditText;
     private EditText mNombreDuenoEditText;
@@ -33,7 +38,7 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
     private Button mDeleteButton;
     private PetDatabase petDatabase;
 
-    private long mCurrentPetId;
+    private long mCurrentPetId = -1;
     private long mCurrentDuenoId;
     private List<Long> razaIds; // Para mapear la posición del Spinner con el ID de la raza
 
@@ -53,13 +58,35 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
         mUpdateButton = findViewById(R.id.BtnUpdatePet);
         mDeleteButton = findViewById(R.id.BtnDeletePet);
 
-        // Obtener el ID de la mascota a editar
         Intent intent = getIntent();
-        // Usamos la misma clave que enviaremos desde MainActivity
-        mCurrentPetId = intent.getLongExtra("pet_id", -1);
 
+        // 1. Intentamos obtener el ID como un Long Extra, usando la clave "pet_id"
+        mCurrentPetId = intent.getLongExtra(EXTRA_MASCOTA_ID_KEY, -1);
+
+        // 🚨 Aquí el log mostrará el ID correcto (ej: 1), resolviendo tu error anterior.
+        Log.d(TAG, "Intentando cargar mascota, ID recibido con clave '" + EXTRA_MASCOTA_ID_KEY + "': " + mCurrentPetId);
+
+
+        // 2. Lógica de URI de respaldo (mantenida por si acaso)
         if (mCurrentPetId == -1) {
-            Toast.makeText(this, "Error: No se encontró el ID de la mascota.", Toast.LENGTH_SHORT).show();
+            Uri currentPetUri = intent.getData();
+
+            if (currentPetUri != null) {
+                String petIdString = currentPetUri.getLastPathSegment();
+                try {
+                    mCurrentPetId = Long.parseLong(petIdString);
+                    Log.d(TAG, "Mascota ID obtenida de URI: " + mCurrentPetId);
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "Error: El ID de la mascota en la URI no es un número válido.", e);
+                }
+            } else {
+                Log.e(TAG, "Error: No se encontró un Long Extra con clave '" + EXTRA_MASCOTA_ID_KEY + "' ni una URI válida.");
+            }
+        }
+
+        // 3. Verificación final del ID
+        if (mCurrentPetId == -1) {
+            Toast.makeText(this, "Error: No se encontró el ID de la mascota para editar.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -67,7 +94,7 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
         // Cargar Razas (necesario antes de cargar los detalles)
         setupBreedSpinner();
 
-        // Cargar Detalles de la Mascota
+        // Cargar Detalles de la Mascota (ahora con mCurrentPetId válido)
         loadPetDetails();
 
         // Configurar Listeners
@@ -81,6 +108,7 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Aquí podrías agregar un diálogo de confirmación antes de eliminar
                 deletePet();
             }
         });
@@ -94,9 +122,20 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
         List<String> razaNombres = new ArrayList<>();
         razaIds = new ArrayList<>();
 
+        // Añadir una raza por defecto para evitar listas vacías si la BD no tiene datos
+        razaNombres.add("Cargando...");
+        razaIds.add(-1L);
+
         if (cursor != null && cursor.moveToFirst()) {
-            int nameColumnIndex = cursor.getColumnIndexOrThrow(RazasEntry.COLUMN_NOMBRE);
-            int idColumnIndex = cursor.getColumnIndexOrThrow(RazasEntry._ID);
+            // Limpiar los valores por defecto
+            razaNombres.clear();
+            razaIds.clear();
+
+            // Usar getColumnIndex con strings para mayor robustez y resolver error de símbolo
+            // Asumimos que la columna de nombre de raza se llama "nombre"
+            int nameColumnIndex = cursor.getColumnIndexOrThrow("nombre");
+            // Asumimos que la columna ID se llama "_id" (como BaseColumns)
+            int idColumnIndex = cursor.getColumnIndexOrThrow("_id");
 
             do {
                 razaNombres.add(cursor.getString(nameColumnIndex));
@@ -118,34 +157,49 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
      * Carga los datos de la mascota actual en la UI.
      */
     private void loadPetDetails() {
+        // Usa el ID que ahora esperamos sea válido (ej: 1)
         Cursor cursor = petDatabase.getPetDetailsCursor(mCurrentPetId);
 
         if (cursor != null && cursor.moveToFirst()) {
-            // Extraer datos de Mascota
-            String petNombre = cursor.getString(cursor.getColumnIndexOrThrow(MascotasEntry.COLUMN_NOMBRE));
-            int petEdad = cursor.getInt(cursor.getColumnIndexOrThrow(MascotasEntry.COLUMN_EDAD));
-            long razaId = cursor.getLong(cursor.getColumnIndexOrThrow(MascotasEntry.COLUMN_RAZA_ID));
-            mCurrentDuenoId = cursor.getLong(cursor.getColumnIndexOrThrow(MascotasEntry.COLUMN_DUENO_ID));
+            try {
+                // Extracción de datos de Mascota usando nombres de columna string
+                String petNombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                int petEdad = cursor.getInt(cursor.getColumnIndexOrThrow("edad"));
+                long razaId = cursor.getLong(cursor.getColumnIndexOrThrow("raza_id"));
+                mCurrentDuenoId = cursor.getLong(cursor.getColumnIndexOrThrow("dueno_id"));
 
-            // Extraer datos de Dueño (aliased in PetDatabase)
-            // Asegúrate que el método getPetDetailsCursor en PetDatabase usa "dueno_nombre" y "dueno_telefono"
-            String duenoNombre = cursor.getString(cursor.getColumnIndexOrThrow("dueno_nombre"));
-            String duenoTelefono = cursor.getString(cursor.getColumnIndexOrThrow("dueno_telefono"));
+                // Extraer datos de Dueño (asumimos aliases 'dueno_nombre' y 'dueno_telefono' en el JOIN)
+                String duenoNombre = cursor.getString(cursor.getColumnIndexOrThrow("dueno_nombre"));
+                String duenoTelefono = cursor.getString(cursor.getColumnIndexOrThrow("dueno_telefono"));
 
-            // Rellenar campos
-            mNombreEditText.setText(petNombre);
-            mEdadEditText.setText(String.valueOf(petEdad));
-            mNombreDuenoEditText.setText(duenoNombre);
-            mTelefonoDuenoEditText.setText(duenoTelefono);
+                // Rellenar campos
+                mNombreEditText.setText(petNombre);
+                mEdadEditText.setText(String.valueOf(petEdad));
+                mNombreDuenoEditText.setText(duenoNombre);
+                mTelefonoDuenoEditText.setText(duenoTelefono);
 
-            // Seleccionar Raza
-            int razaPosition = razaIds.indexOf(razaId);
-            if (razaPosition != -1) {
-                mRazaSpinner.setSelection(razaPosition);
+                // Seleccionar Raza
+                int razaPosition = razaIds.indexOf(razaId);
+                if (razaPosition != -1) {
+                    mRazaSpinner.setSelection(razaPosition);
+                } else {
+                    Log.w(TAG, "ID de Raza no encontrada en la lista del Spinner.");
+                }
+
+                Log.d(TAG, "Detalles cargados exitosamente para ID: " + mCurrentPetId);
+
+            } catch (IllegalArgumentException e) {
+                // Esto atrapa errores si los nombres de las columnas (o aliases) en el cursor son incorrectos
+                Log.e(TAG, "Error al obtener columnas del cursor en loadPetDetails.", e);
+                Toast.makeText(this, "Error de datos: verifica las columnas en PetDatabase.", Toast.LENGTH_LONG).show();
+            } finally {
+                cursor.close();
             }
-            cursor.close();
+
         } else {
-            Toast.makeText(this, "Error al cargar detalles.", Toast.LENGTH_SHORT).show();
+            // Este es el caso donde la consulta a la DB falla.
+            Log.e(TAG, "Error: La mascota con ID " + mCurrentPetId + " no se encontró en la DB.");
+            Toast.makeText(this, "Error al cargar detalles de la mascota. ID no encontrado.", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -159,16 +213,23 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
         String duenoNombre = mNombreDuenoEditText.getText().toString().trim();
         String duenoTelefono = mTelefonoDuenoEditText.getText().toString().trim();
 
-        // Validación simple
+        // 1. Validación de campos
         if (petNombre.isEmpty() || petEdadStr.isEmpty() || duenoNombre.isEmpty() || duenoTelefono.isEmpty()) {
             Toast.makeText(this, "Debe completar todos los campos.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int petEdad = Integer.parseInt(petEdadStr);
+        int petEdad;
+        try {
+            petEdad = Integer.parseInt(petEdadStr);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "La edad debe ser un número entero válido.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         long razaId = razaIds.get(mRazaSpinner.getSelectedItemPosition());
 
-        // Usamos el método que actualiza mascota y dueño
+        // 2. Actualización de la mascota y el dueño
         int rowsAffected = petDatabase.updatePetAndOwner(
                 mCurrentPetId,
                 petNombre,
@@ -179,11 +240,12 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
                 duenoTelefono
         );
 
+        // 3. Resultados
         if (rowsAffected > 0) {
             Toast.makeText(this, "Mascota actualizada con éxito!", Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            Toast.makeText(this, "Error al actualizar la mascota.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al actualizar la mascota. Verifica el método en PetDatabase.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -197,7 +259,7 @@ public class UpdateDeletePetActivity extends AppCompatActivity {
             Toast.makeText(this, "Mascota eliminada con éxito!", Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            Toast.makeText(this, "Error al eliminar la mascota.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al eliminar la mascota. Verifica el método en PetDatabase.", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -1,39 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:background="#121212"
     tools:context=".MainActivity">
 
-    <!-- 1. LISTVIEW DE MASCOTAS (EL ELEMENTO QUE FALTABA) -->
-    <!-- Este elemento es crucial, ya que el código Java lo busca por el ID "listViewMascotas" -->
+    <!-- Lista de Mascotas -->
     <ListView
-        android:id="@+id/listViewMascotas"
+        android:id="@+id/pet_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#EEEEEE"
-        android:dividerHeight="1dp" />
+        android:paddingTop="8dp"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"
+        android:listSelector="@android:color/transparent"
+        />
 
-    <!-- 2. BOTÓN FLOTANTE PARA AGREGAR NUEVA MASCOTA -->
-    <!-- Este elemento se busca por el ID "BtnAddPet" en MainActivity.java -->
-    <ImageButton
-        android:id="@+id/BtnAddPet"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+    <!-- Vista Vacía (Se muestra cuando la lista está vacía) -->
+    <RelativeLayout
+        android:id="@+id/empty_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:padding="32dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/ic_pet_outline"
+                android:contentDescription="No hay mascotas"
+                app:tint="#BB86FC" /> <!-- Color de acento morado -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¡Aún no hay mascotas registradas!"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toca el botón '+' para añadir una nueva mascota y su dueño."
+                android:textColor="#AAAAAA"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Botón de VER CITAS (Usa ic_pet_outline como placeholder para evitar error de símbolo) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_view_schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="Ver Citas"
+        android:textColor="@color/black"
+        app:backgroundTint="#BB86FC"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:cornerRadius="24dp"
+        app:icon="@drawable/ic_pet_outline"
+        app:iconTint="@color/black"
+        android:elevation="6dp"
+        />
+
+    <!-- Floating Action Button para añadir mascotas (Usa el icono genérico de Android) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_pet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:src="@android:drawable/ic_input_add"
-        android:contentDescription="Agregar Mascota"
-        android:background="@drawable/rounded_button_bg"
-        android:elevation="4dp"
-        app:tint="@android:color/white" />
-
-    <!-- NOTA: Necesitas crear un drawable llamado 'rounded_button_bg.xml' para el fondo del botón,
-         o simplemente usar un color sólido si no quieres crear un drawable. -->
+        android:contentDescription="Añadir Mascota"
+        app:tint="@color/black"
+        app:backgroundTint="#03DAC6"
+        app:elevation="6dp"
+        app:maxImageSize="32dp"/>
 
 </RelativeLayout>
-

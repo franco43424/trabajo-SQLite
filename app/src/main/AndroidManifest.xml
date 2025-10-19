@@ -1,6 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyectodesqlite">
+
+    <!-- PERMISOS: Añadimos un permiso común si usas photo_uri para acceder a imágenes. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <!-- Si la aplicación apunta a API 33+, necesitarías usar un permiso más específico como READ_MEDIA_IMAGES -->
 
     <application
         android:allowBackup="true"
@@ -10,9 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyectodesqlite">
 
-        <!-- 1. MainActivity -->
-        <activity
-            android:name=".MainActivity"
+        <activity android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,17 +21,13 @@
             </intent-filter>
         </activity>
 
-        <!-- 2. AddPetActivity -->
-        <activity
-            android:name=".AddPetActivity"
-            android:parentActivityName=".MainActivity" />
+        <!-- REGISTRAR LAS ACTIVITIES DE CREACIÓN/LISTADO -->
+        <activity android:name=".AddPetActivity" android:label="Paso 1: Mascota" android:parentActivityName=".MainActivity" />
+        <activity android:name=".AddOwnerActivity" android:label="Paso 2: Dueño" android:parentActivityName=".AddPetActivity" />
+        <activity android:name=".ScheduleActivity" android:label="Agendar Cita" android:parentActivityName=".MainActivity" />
 
-        <!-- 3. UpdateDeletePetActivity (¡FALTABA ESTO!) -->
-        <activity
-            android:name=".UpdateDeletePetActivity"
-            android:parentActivityName=".MainActivity" />
+        <!-- ACTIVIDAD AÑADIDA PARA EDICIÓN Y ELIMINACIÓN -->
+        <activity android:name=".UpdateDeletePetActivity" android:label="Editar Mascota" android:parentActivityName=".MainActivity" />
 
     </application>
-
 </manifest>
-

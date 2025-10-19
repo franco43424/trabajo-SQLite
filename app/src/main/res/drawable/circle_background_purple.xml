@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <!-- Color de fondo (Purple de Material Design Dark) -->
+    <solid android:color="#BB86FC"/>
+    <!-- El tamaño del círculo se define en el TextView que lo usa (50dp x 50dp) -->
+</shape>

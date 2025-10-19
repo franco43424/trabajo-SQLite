@@ -3,132 +3,148 @@ package com.example.proyectodesqlite;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.database.Cursor;
-import com.example.proyectodesqlite.bd.PetContract.RazasEntry;
+
 import com.example.proyectodesqlite.bd.PetDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Actividad para agregar una nueva mascota (y su dueño, ya que el dueño existente fue eliminado).
+ * Actividad para añadir una nueva mascota y su dueño asociado.
+ * Esta actividad gestiona la inserción completa de Dueño y Mascota en un solo paso.
  */
 public class AddPetActivity extends AppCompatActivity {
 
-    private EditText mNombreEditText;
-    private EditText mEdadEditText;
+    private static final String TAG = "AddPetActivity";
+
+    private EditText mNombreMascotaEditText;
+    private EditText mEdadMascotaEditText;
     private EditText mNombreDuenoEditText;
     private EditText mTelefonoDuenoEditText;
     private Spinner mRazaSpinner;
-    private PetDatabase petDatabase;
+    private Button mSaveButton;
 
-    private List<Long> razaIds; // Para mapear la posición del Spinner con el ID de la raza
+    private PetDatabase petDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_pet); // Usamos el layout actualizado
+        // Usamos el layout que contiene tanto los campos de la mascota como los del dueño
+        setContentView(R.layout.activity_add_pet);
 
-        // Inicializar la base de datos
         petDatabase = new PetDatabase(this);
 
         // Inicializar Vistas
-        mNombreEditText = findViewById(R.id.edit_pet_name);
-        mEdadEditText = findViewById(R.id.edit_pet_age);
+        mNombreMascotaEditText = findViewById(R.id.edit_pet_name);
+        mEdadMascotaEditText = findViewById(R.id.edit_pet_age);
         mNombreDuenoEditText = findViewById(R.id.edit_owner_name);
         mTelefonoDuenoEditText = findViewById(R.id.edit_owner_phone);
         mRazaSpinner = findViewById(R.id.spinner_breed);
-        Button saveButton = findViewById(R.id.BtnSavePet);
+        mSaveButton = findViewById(R.id.BtnSavePet);
 
-        // Configurar Spinners
+        // Cargar las razas en el Spinner
         setupBreedSpinner();
 
-        // Configurar Listener del botón de guardar
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                guardarMascota();
+                savePet();
             }
         });
     }
 
     /**
-     * Carga las razas disponibles desde la base de datos y las popula en el Spinner.
+     * Obtiene los nombres de las razas de la BD y los carga en el Spinner.
      */
     private void setupBreedSpinner() {
-        Cursor cursor = petDatabase.getBreedsCursor();
-        List<String> razaNombres = new ArrayList<>();
-        razaIds = new ArrayList<>();
+        try {
+            // Este método DEBE existir en PetDatabase.java
+            List<String> breedNames = petDatabase.getAllBreedNames();
 
-        if (cursor != null && cursor.moveToFirst()) {
-            int nameColumnIndex = cursor.getColumnIndexOrThrow(RazasEntry.COLUMN_NOMBRE);
-            int idColumnIndex = cursor.getColumnIndexOrThrow(RazasEntry._ID);
-
-            do {
-                razaNombres.add(cursor.getString(nameColumnIndex));
-                razaIds.add(cursor.getLong(idColumnIndex));
-            } while (cursor.moveToNext());
-            cursor.close();
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_spinner_item,
+                    breedNames
+            );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mRazaSpinner.setAdapter(adapter);
+        } catch (Exception e) {
+            Log.e(TAG, "Error al configurar el Spinner de Razas", e);
+            Toast.makeText(this, "Error al cargar las razas: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                razaNombres
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mRazaSpinner.setAdapter(adapter);
     }
 
     /**
-     * Lee la entrada del usuario y guarda el nuevo Dueño y la nueva Mascota en la base de datos.
-     * Esta es la función principal que resuelve el error de validación y guarda los datos.
+     * Recoge los datos y los inserta primero en la tabla Dueños y luego en Mascotas,
+     * usando el ID del Dueño insertado como clave foránea.
      */
-    private void guardarMascota() {
-        String petNombre = mNombreEditText.getText().toString().trim();
-        String petEdadStr = mEdadEditText.getText().toString().trim();
+    private void savePet() {
+        // Recoger datos de la mascota
+        String petNombre = mNombreMascotaEditText.getText().toString().trim();
+        String petEdadStr = mEdadMascotaEditText.getText().toString().trim();
+        String razaNombre = (String) mRazaSpinner.getSelectedItem();
+
+        // Recoger datos del dueño
         String duenoNombre = mNombreDuenoEditText.getText().toString().trim();
         String duenoTelefono = mTelefonoDuenoEditText.getText().toString().trim();
 
-        // 1. Validar que todos los campos obligatorios estén llenos
+        // 1. Validación de campos obligatorios
         if (petNombre.isEmpty() || petEdadStr.isEmpty() || duenoNombre.isEmpty() || duenoTelefono.isEmpty()) {
-            Toast.makeText(this, "Debe completar todos los datos de la Mascota y el Dueño.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Por favor, complete todos los campos obligatorios.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int petEdad = Integer.parseInt(petEdadStr);
-
-        // Obtener el ID de la raza seleccionada
-        int selectedPosition = mRazaSpinner.getSelectedItemPosition();
-        if (selectedPosition == Spinner.INVALID_POSITION || razaIds.isEmpty()) {
-            Toast.makeText(this, "Error al seleccionar la raza.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        long razaId = razaIds.get(selectedPosition);
-
-        // 2. Insertar el nuevo Dueño y obtener su ID
-        long duenoId = petDatabase.insertOwner(duenoNombre, duenoTelefono);
-
-        if (duenoId == -1) {
-            Toast.makeText(this, "Error al guardar el Dueño.", Toast.LENGTH_SHORT).show();
+        int petEdad;
+        // Validación de formato numérico de la edad
+        try {
+            petEdad = Integer.parseInt(petEdadStr);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "La edad debe ser un número entero válido.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // 3. Insertar la Mascota usando el duenoId recién generado
-        long petId = petDatabase.insertPet(petNombre, petEdad, duenoId, razaId);
+        try {
+            // 2. Insertar Dueño (Esto debe hacerse primero para obtener el duenoId)
+            // Asumimos que no hay URI de foto por ahora (pasamos null)
+            long duenoId = petDatabase.insertOwner(duenoNombre, duenoTelefono, null);
 
-        if (petId == -1) {
-            // Si la mascota falla, considera revertir la inserción del dueño (transacción)
-            Toast.makeText(this, "Error al guardar la Mascota.", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Mascota guardada con éxito!", Toast.LENGTH_SHORT).show();
-            finish(); // Cierra la actividad para volver a la lista principal
+            if (duenoId == -1) {
+                Toast.makeText(this, "Error crítico al guardar el dueño.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // 3. Obtener ID de la Raza
+            long razaId = petDatabase.getBreedIdByName(razaNombre);
+
+            if (razaId == -1) {
+                Log.w(TAG, "Advertencia: Raza no encontrada. Usando ID 1 (Asumido 'Sin Raza').");
+                Toast.makeText(this, "Raza no encontrada. Usando valor por defecto.", Toast.LENGTH_SHORT).show();
+                // Se asume que la ID 1 corresponde a una raza por defecto (ej: 'Sin Raza')
+                razaId = 1;
+            }
+
+            // 4. Insertar Mascota (Usando las Claves Foráneas de Dueño y Raza)
+            // Asumimos que no hay URI de foto por ahora (pasamos null)
+            long petId = petDatabase.insertPet(petNombre, petEdad, razaId, duenoId, null);
+
+            if (petId != -1) {
+                Toast.makeText(this, "Mascota y Dueño guardados con ID: " + petId, Toast.LENGTH_LONG).show();
+
+                // Indica a la actividad principal que se ha realizado un cambio
+                setResult(RESULT_OK);
+                finish(); // Cerrar la actividad y volver a MainActivity
+            } else {
+                Toast.makeText(this, "Error al guardar la mascota.", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error durante la inserción de datos", e);
+            Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

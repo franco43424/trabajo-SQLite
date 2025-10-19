@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    tools:context=".ScheduleActivity">
+
+    <!-- Este es un truco para evitar que el primer EditText tome foco automáticamente -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:focusableInTouchMode="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agendar Nueva Cita"
+            android:textSize="28sp"
+            android:textColor="#BB86FC"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:layout_marginBottom="32dp"/>
+
+        <!-- CAMPO 1: Selección de Mascota -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mascota a Agendar:"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:labelFor="@+id/spinnerPet"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerPet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/custom_spinner_background"
+            android:popupBackground="#1F1F1F"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- CAMPO 2: Fecha de la Cita -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha de la Cita:"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:labelFor="@+id/etDate"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Selecciona la fecha (DD/MM/AAAA)"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:drawableStart="@android:drawable/ic_menu_today"
+            app:drawableTint="#03DAC6"
+            android:drawablePadding="12dp"
+            android:minHeight="56dp"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- CAMPO 3: Hora de la Cita -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hora de la Cita:"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:labelFor="@+id/etTime"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Selecciona la hora (HH:MM)"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:drawableStart="@android:drawable/ic_lock_idle_alarm"
+            app:drawableTint="#03DAC6"
+            android:drawablePadding="12dp"
+            android:minHeight="56dp"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- CAMPO 4: Motivo de la Cita -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Motivo de la Cita:"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:labelFor="@+id/etReason"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Describe el motivo de la visita (ej: Vacunación anual)"
+            android:inputType="textCapSentences|textMultiLine"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:gravity="top"
+            android:minLines="4"
+            android:maxLines="6"
+            android:layout_marginBottom="32dp"/>
+
+        <!-- BOTÓN -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSchedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agendar Cita"
+            android:textColor="@color/black"
+            app:backgroundTint="#03DAC6"
+            android:padding="16dp"
+            android:textSize="18sp"
+            app:cornerRadius="8dp"
+            app:rippleColor="#BB86FC"/>
+
+    </LinearLayout>
+</ScrollView>
