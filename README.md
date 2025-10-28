@@ -1,176 +1,97 @@
-🐶 PetCare Pro: Aplicación de Bienestar Nativa para Android
+🏥 PetCare Pro: Asistente de Gestión Veterinaria
 
-📝 Descripción del Proyecto y Funcionalidad
+¡Bienvenid@ al repositorio de PetCare Pro!
+Una aplicación de gestión móvil desarrollada en Java y Android Studio, diseñada para simplificar el manejo de registros de clientes, mascotas y citas en clínicas veterinarias.
 
-PetCare Pro es una aplicación móvil nativa desarrollada para la plataforma Android. Su principal propósito es servir como un sistema de gestión de registros para una clínica veterinaria o un asistente personal de dueños de mascotas. La aplicación permite registrar la información de los dueños, sus mascotas y gestionar su historial de citas y salud.
+📌 ¿Qué es PetCare Pro?
 
-La aplicación está optimizada para la versión de Android (API 36.0 - Medium Phone) y utiliza una base de datos local SQLite para garantizar la persistencia de los datos en el dispositivo.
+PetCare Pro es un sistema de registros completo desarrollado para Android. Su objetivo principal es ofrecer una solución local y eficiente para la gestión de datos CRUD (Crear, Leer, Actualizar, Eliminar) de dueños de mascotas y su historial médico.
 
-✨ Flujos de Trabajo y Características Clave
+El proyecto está diseñado con un enfoque práctico y educativo, ideal para demostrar habilidades en el desarrollo nativo de Android y la persistencia de datos con SQLite.
 
-La aplicación permite la gestión completa de los perfiles y el agendamiento:
+🧰 Información Técnica Detallada
 
-1. Gestión de Perfiles (CRUD)
+Lenguaje Principal: ☕ Java (versión 1.8+)
 
-Módulo
+IDE de Desarrollo: 📱 Android Studio
 
-Funcionalidades
+Sistema de Build: 🧩 Gradle
 
-Dueños
+Plugin Android Gradle (AGP): ⚙️ Versión moderna de 8.x
 
-✅ Crear: Registro de un nuevo propietario (nombre, teléfono, foto).
+SDK Mínimo (minSdk): 📱 24 (Android 7.0 Nougat)
 
+SDK Objetivo (targetSdk): 🎯 34 (Android 14)
 
+Base de Datos: 💾 SQLite integrada y persistente
 
-✅ Modificar/Medicar: (Se entiende como Modificar) Actualizar la información del dueño.
+Diseño UI: 🎨 XML nativo y estilos personalizados
 
+Arquitectura: 🧠 MVC (Model-View-Controller) simplificada
 
+🛠️ Características Principales
 
-✅ Eliminar: Borrar el perfil del dueño, lo que debería manejar las referencias a sus mascotas.
+✅ Gestión Completa de Clientes: Permite registrar, modificar y eliminar perfiles de dueños de mascotas (con campos como nombre, telefono).
 
-Mascotas
+🐶 Perfiles Detallados de Mascotas: Creación de registros de animales vinculados a un dueño (incluye nombre, edad, y raza_id). También permite modificar y eliminar perfiles de mascotas.
 
-✅ Crear: Asociar una nueva mascota a un dueño existente (nombre, edad, raza, foto).
+🗓️ Agenda de Citas: Un módulo completo para:
 
+Agendar Citas: Programar servicios o consultas, especificando fecha, hora, motivo, y asociándolos a una Mascota específica.
 
+Visualizar Citas: Revisar eventos programados.
 
-✅ Modificar/Medicar: (Se entiende como Modificar) Actualizar los datos de la mascota.
+Eliminar Citas: Cancelar o borrar un evento.
 
+🔒 Persistencia Local: Todos los datos se almacenan de forma segura en una base de datos SQLite, directamente en el dispositivo.
 
+🏗️ Estructura Modular: El código está organizado de manera limpia y escalable, facilitando futuras extensiones.
 
-✅ Eliminar: Borrar el perfil de la mascota.
+✨ Compatibilidad Amplia: Optimizado para la mayoría de los dispositivos Android modernos (API 24+).
 
-2. Gestión de Citas (Agenda)
+🗄️ Estructura de la Base de Datos (SQLite)
 
-Agendar Cita: Programar una nueva cita, asociándola directamente a una Mascota específica, con detalles de fecha, hora y motivo.
+El esquema relacional se basa en el archivo de contrato (PetContract.java) y organiza los datos en cuatro tablas principales:
 
-Visualizar Citas: Revisar las citas pendientes o históricas asociadas a cada mascota.
+duenos:
 
-Eliminar Cita: Cancelar o borrar un registro de cita.
+Propósito: Almacena la información de los propietarios/clientes.
 
-🛠️ Tecnologías Utilizadas
+Columnas Clave: _ID, nombre, telefono.
 
-Este proyecto es una aplicación nativa de Android y se basa en el siguiente stack tecnológico:
+Relaciones: No tiene claves foráneas.
 
-Componente
+razas:
 
-Tecnología
+Propósito: Contiene un catálogo de las diferentes razas de mascotas.
 
-Versión / Tipo
+Columnas Clave: _ID, nombre.
 
-Propósito
+Relaciones: No tiene claves foráneas.
 
-Plataforma
+mascotas:
 
-Android Studio
+Propósito: Guarda los registros detallados de cada animal.
 
-IDE de desarrollo.
+Columnas Clave: _ID, nombre, edad.
 
-Entorno principal de desarrollo.
+Relaciones: Incluye claves foráneas para dueno_id (vinculando a la tabla duenos) y raza_id (vinculando a la tabla razas).
 
-Lenguaje
+citas:
 
-Java
+Propósito: Gestiona la agenda de eventos y servicios programados.
 
-1.8+
+Columnas Clave: _ID, fecha, hora, motivo.
 
-Lógica de negocio y desarrollo de la UI.
+Relaciones: Contiene una clave foránea pet_id que la vincula directamente con la mascota en la tabla mascotas.
 
-Base de Datos
+🚀 Instalación y Ejecución Local
 
-SQLite
+Sigue estos pasos para poner en marcha el proyecto en tu máquina:
 
-Base de datos relacional.
+Clonar el Repositorio: Abre tu terminal o línea de comandos y ejecuta:
 
-Almacenamiento persistente, local y seguro de la información.
-
-Target SDK
-
-Android 14 (API 36.0)
-
-Optimización de la aplicación.
-
-Garantizar la compatibilidad con dispositivos modernos.
-
-🗄️ Arquitectura y Esquema de la Base de Datos Local (SQLite)
-
-La persistencia de los datos se gestiona mediante SQLite, siguiendo un patrón modular y organizado.
-
-1. Clases de Arquitectura de Datos
-
-Las clases en Java utilizadas para gestionar la base de datos son:
-
-Clase
-
-Propósito
-
-PetContract
-
-Contrato de Esquema: Define constantes para los nombres de las tablas y las columnas.
-
-DBHelper
-
-Asistente de Base de Datos: Gestiona la creación de la base de datos (onCreate) y su actualización (onUpgrade).
-
-PetDatabase
-
-Capa de Abstracción/DAO: (Data Access Object) Contiene la lógica para las operaciones CRUD específicas.
-
-PetCursorAdapter
-
-Adaptador de UI: Enlaza los resultados de las consultas (Cursor) con los componentes de la interfaz de usuario.
-
-2. Esquema de Tablas (PetContract Definido)
-
-La base de datos tiene una estructura relacional con las siguientes cuatro tablas:
-
-Tabla
-
-Propósito
-
-Columnas Clave
-
-Relaciones (FK)
-
-duenos (OwnerEntry)
-
-Información de los propietarios de las mascotas.
-
-_ID, nombre, telefono, photo_uri
-
-N/A
-
-razas (RazaEntry)
-
-Catálogo de razas disponibles.
-
-_ID, nombre
-
-N/A
-
-mascotas (MascotasEntry)
-
-Perfiles completos de los animales.
-
-_ID, nombre, edad, photo_uri
-
-dueno_id (Dueños), raza_id (Razas)
-
-citas (CitasEntry)
-
-Agenda de eventos veterinarios o de servicio.
-
-_ID, fecha, hora, motivo
-
-pet_id (Mascotas)
-
-🚀 Instalación y Ejecución
-
-Para clonar y ejecutar la aplicación en tu entorno local:
-
-Clonar el Repositorio:
-
-git clone [URL_DEL_REPOSITORIO]
+git clone [URL_DEL_REPOSITORIO_AQUI]
 cd PetCarePro
 
 
@@ -178,12 +99,14 @@ Abrir en Android Studio:
 
 Inicia Android Studio.
 
-Selecciona File > Open... y navega hasta el directorio PetCarePro.
+Selecciona File > Open... en el menú.
 
-Configurar Dispositivo/Emulador:
+Navega hasta la carpeta PetCarePro que acabas de clonar y haz clic en Open.
 
-Asegúrate de tener un Emulador configurado con la API 36.0 o superior, o conecta un dispositivo físico compatible.
+Sincronizar y Ejecutar:
 
-Ejecutar la Aplicación:
+Espera a que Android Studio sincronice el proyecto con Gradle (esto puede tardar unos minutos).
 
-Haz clic en el botón Run (triángulo verde) en la barra de herramientas de Android Studio. El IDE compilará el código en Java y desplegará la APK en el dispositivo seleccionado.
+Una vez sincronizado, selecciona tu emulador o dispositivo físico (se recomienda un Target SDK 34).
+
+Haz clic en el botón Run (el ícono de ▶️ verde) en la barra de herramientas para compilar e instalar la aplicación.
